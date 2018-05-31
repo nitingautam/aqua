@@ -3,7 +3,8 @@ const Code = require('code');
 const Lab = require('lab');
 const Proxyquire = require('proxyquire');
 const React = require('react');
-const ReactTestUtils = require('react-addons-test-utils');
+const ReactRouter = require('react-router-dom');
+const ReactTestUtils = require('react-dom/test-utils');
 
 
 const lab = exports.lab = Lab.script();
@@ -13,6 +14,7 @@ const stub = {
 const Form = Proxyquire('../../../../../../client/pages/admin/users/details/roles-form.jsx', {
     './actions': stub.Actions
 });
+const MemoryRouter = ReactRouter.MemoryRouter;
 
 
 lab.experiment('Admin Users Roles Form', () => {
@@ -20,7 +22,9 @@ lab.experiment('Admin Users Roles Form', () => {
     lab.test('it renders', (done) => {
 
         const FormEl = React.createElement(Form, {});
-        const form = ReactTestUtils.renderIntoDocument(FormEl);
+        const RootEl = React.createElement(MemoryRouter, {}, FormEl);
+        const root = ReactTestUtils.renderIntoDocument(RootEl);
+        const form = ReactTestUtils.findRenderedComponentWithType(root, Form);
 
         Code.expect(form).to.exist();
 
@@ -41,7 +45,9 @@ lab.experiment('Admin Users Roles Form', () => {
             }
         };
         const FormEl = React.createElement(Form, props);
-        const form = ReactTestUtils.renderIntoDocument(FormEl);
+        const RootEl = React.createElement(MemoryRouter, {}, FormEl);
+        const root = ReactTestUtils.renderIntoDocument(RootEl);
+        const form = ReactTestUtils.findRenderedComponentWithType(root, Form);
 
         Code.expect(form).to.exist();
 

@@ -1,15 +1,16 @@
 /* global document, window */
 'use strict';
 const ClassNames = require('classnames');
+const PropTypes = require('prop-types');
 const React = require('react');
 
 
 const propTypes = {
-    children: React.PropTypes.node,
-    footer: React.PropTypes.node,
-    header: React.PropTypes.node,
-    onClose: React.PropTypes.func,
-    show: React.PropTypes.bool
+    children: PropTypes.node,
+    footer: PropTypes.node,
+    header: PropTypes.node,
+    onClose: PropTypes.func,
+    show: PropTypes.bool
 };
 
 
@@ -123,8 +124,8 @@ class Modal extends React.Component {
                     onClick={this.onBackdropClick.bind(this)}>
 
                     <div
-                      ref={(c) => (this.els.dialog = c)}
-                      className="modal-dialog">
+                        ref={(c) => (this.els.dialog = c)}
+                        className="modal-dialog">
 
                         <div className="modal-content">
                             {modalHeader}

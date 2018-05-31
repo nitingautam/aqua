@@ -1,10 +1,11 @@
 'use strict';
+const Code = require('code');
 const Constants = require('../../../../../../client/pages/admin/accounts/search/constants');
 const Lab = require('lab');
 const Proxyquire = require('proxyquire');
 const React = require('react');
 const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-addons-test-utils');
+const ReactTestUtils = require('react-dom/test-utils');
 const Store = require('../../../../../../client/pages/admin/accounts/search/store');
 
 
@@ -26,7 +27,7 @@ const defaultProps = {
         }
     },
     location: {
-        query: {}
+        search: ''
     }
 };
 
@@ -43,15 +44,22 @@ lab.experiment('Admin Accounts Search Page', () => {
 
     lab.test('it renders', (done) => {
 
+        defaultProps.ref.impl = function (page) {
+
+            defaultProps.ref.impl = undefined;
+
+            Code.expect(page).to.exist();
+
+            done();
+        };
+
         const PageEl = React.createElement(Page, defaultProps);
 
         ReactDOM.render(PageEl, container);
-
-        done();
     });
 
 
-    lab.test('it updates props with new query location data', (done) => {
+    lab.test('it updates props with new search location data', (done) => {
 
         stub.Actions.getResults = function () {
 
@@ -67,9 +75,7 @@ lab.experiment('Admin Accounts Search Page', () => {
         // update props and render again
         const props = Object.assign({}, defaultProps, {
             location: {
-                query: {
-                    foo: 'bar'
-                }
+                search: '?foo=bar'
             }
         });
         PageEl = React.createElement(Page, props);

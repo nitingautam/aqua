@@ -13,7 +13,7 @@ class Account extends MongoModels {
         const document = {
             name: {
                 first: nameParts.shift(),
-                middle: nameParts.length > 1 ? nameParts.shift() : undefined,
+                middle: nameParts.length > 1 ? nameParts.shift() : '',
                 last: nameParts.join(' ')
             },
             timeCreated: new Date()
@@ -41,26 +41,22 @@ class Account extends MongoModels {
 Account.collection = 'accounts';
 
 
-Account.schema = Joi.object().keys({
+Account.schema = Joi.object({
     _id: Joi.object(),
-    user: Joi.object().keys({
+    user: Joi.object({
         id: Joi.string().required(),
         name: Joi.string().lowercase().required()
     }),
-    name: Joi.object().keys({
+    name: Joi.object({
         first: Joi.string().required(),
         middle: Joi.string().allow(''),
         last: Joi.string().required()
     }),
-    status: Joi.object().keys({
+    status: Joi.object({
         current: StatusEntry.schema,
         log: Joi.array().items(StatusEntry.schema)
     }),
     notes: Joi.array().items(NoteEntry.schema),
-    verification: Joi.object().keys({
-        complete: Joi.boolean(),
-        token: Joi.string()
-    }),
     timeCreated: Joi.date()
 });
 

@@ -135,7 +135,7 @@ internals.applyRoutes = function (server, next) {
                     id: Joi.string().invalid('111111111111111111111111')
                 },
                 payload: {
-                    name: Joi.object().keys({
+                    name: Joi.object({
                         first: Joi.string().required(),
                         middle: Joi.string().allow(''),
                         last: Joi.string().required()
@@ -486,7 +486,6 @@ internals.applyRoutes = function (server, next) {
         },
         handler: function (request, reply) {
 
-
             Admin.findByIdAndDelete(request.params.id, (err, admin) => {
 
                 if (err) {
@@ -497,7 +496,7 @@ internals.applyRoutes = function (server, next) {
                     return reply(Boom.notFound('Document not found.'));
                 }
 
-                reply({ message: 'Success.' });
+                reply({ success: true });
             });
         }
     });

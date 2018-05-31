@@ -2,7 +2,6 @@
 'use strict';
 const Cookie = require('cookie');
 const Qs = require('qs');
-const ReturnUrlActions = require('../actions/return-url');
 const Xhr = require('xhr');
 
 
@@ -38,9 +37,19 @@ const jsonFetch = function (options, callback) {
 
         if (response.statusCode >= 200 && response.statusCode < 300) {
             if (response.headers.hasOwnProperty('x-auth-required')) {
-                ReturnUrlActions.saveReturnUrl();
+                if (window.location.pathname === '/login') {
+                    return callback(Error('Auth required.'));
+                }
 
-                window.location.href = '/login';
+                let returnUrl = window.location.pathname;
+
+                if (window.location.search.length > 0) {
+                    returnUrl += window.location.search;
+                }
+
+                returnUrl = encodeURIComponent(returnUrl);
+
+                window.location.href = `/login?returnUrl=${returnUrl}`;
             }
             else {
                 callback(null, JSON.parse(body));
@@ -55,7 +64,9 @@ const jsonFetch = function (options, callback) {
 };
 
 
-window.jsonFetch = jsonFetch;
+if (global.window) {
+    window.jsonFetch = jsonFetch;
+}
 
 
 module.exports = jsonFetch;

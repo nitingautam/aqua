@@ -1,18 +1,20 @@
 'use strict';
 const Actions = require('./actions');
-const DeleteForm = require('../../../../../client/components/admin/delete-form.jsx');
+const DeleteForm = require('../../../../../client/pages/admin/components/delete-form.jsx');
 const DetailsForm = require('./details-form.jsx');
-const NoteForm = require('./note-form.jsx');
+const NoteForm = require('../../components/note-form.jsx');
+const PropTypes = require('prop-types');
 const React = require('react');
-const ReactRouter = require('react-router');
-const StatusForm = require('./status-form.jsx');
+const ReactRouter = require('react-router-dom');
+const StatusForm = require('../../components/status-form.jsx');
 const Store = require('./store');
 const UserForm = require('./user-form.jsx');
 
 
 const Link = ReactRouter.Link;
 const propTypes = {
-    params: React.PropTypes.object
+    history: PropTypes.object,
+    match: PropTypes.object
 };
 
 
@@ -21,7 +23,7 @@ class DetailsPage extends React.Component {
 
         super(props);
 
-        Actions.getDetails(this.props.params.id);
+        Actions.getDetails(this.props.match.params.id);
         Actions.getStatusOptions();
 
         this.state = Store.getState();
@@ -82,13 +84,21 @@ class DetailsPage extends React.Component {
                         <UserForm {...this.state.user} />
                     </div>
                     <div className="col-sm-4">
-                        <StatusForm {...this.state.status} />
-                        <NoteForm {...this.state.note} />
+                        <StatusForm
+                            {...this.state.status}
+                            saveAction={Actions.newStatus.bind(Actions, id)}
+                            successCloseAction={Actions.hideStatusSaveSuccess}
+                        />
+                        <NoteForm
+                            {...this.state.note}
+                            saveAction={Actions.newNote.bind(Actions, id)}
+                            successCloseAction={Actions.hideNoteSaveSuccess}
+                        />
                     </div>
                     <div className="col-sm-12">
                         <DeleteForm
                             {...this.state.delete}
-                            action={Actions.delete.bind(Actions, id)}
+                            action={Actions.delete.bind(Actions, id, this.props.history)}
                         />
                     </div>
                 </div>
